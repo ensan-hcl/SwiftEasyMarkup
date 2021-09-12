@@ -7,21 +7,21 @@
 
 import SwiftUI
 
-struct MarkUpQuote: MarkUpView {
-    enum Level: Int {
+public struct MarkUpQuote: MarkUpView {
+    public enum Level: Int {
         case one = 1, two, three, four, five, six
     }
     private var text: LocalizedStringKey
     private var level: Level
-    init(verbatim text: String, level: Level) {
+    public init(verbatim text: String, level: Level) {
         self.text = LocalizedStringKey(text)
         self.level = level
     }
-    init(_ text: LocalizedStringKey, level: Level) {
+    public init(_ text: LocalizedStringKey, level: Level) {
         self.text = text
         self.level = level
     }
-    var body: some View {
+    public var body: some View {
         HStack {
             ForEach (0 ..< level.rawValue) { _ in
                 Rectangle()
@@ -37,31 +37,31 @@ struct MarkUpQuote: MarkUpView {
 
 
 prefix operator >
-prefix func >(value: LocalizedStringKey) -> MarkUpQuote {
+public prefix func >(value: LocalizedStringKey) -> MarkUpQuote {
     return .init(value, level: .one)
 }
 
 prefix operator >>
-prefix func >>(value: LocalizedStringKey) -> MarkUpQuote {
+public prefix func >>(value: LocalizedStringKey) -> MarkUpQuote {
     return .init(value, level: .two)
 }
 
 prefix operator >>>
-prefix func >>>(value: LocalizedStringKey) -> MarkUpQuote {
+public prefix func >>>(value: LocalizedStringKey) -> MarkUpQuote {
     return .init(value, level: .three)
 }
 
 prefix operator >>>>
-prefix func >>>>(value: LocalizedStringKey) -> MarkUpQuote {
+public prefix func >>>>(value: LocalizedStringKey) -> MarkUpQuote {
     return .init(value, level: .four)
 }
 
 prefix operator >>>>>
-prefix func >>>>>(value: LocalizedStringKey) -> MarkUpQuote {
+public prefix func >>>>>(value: LocalizedStringKey) -> MarkUpQuote {
     return .init(value, level: .five)
 }
 
 prefix operator >>>>>>
-prefix func >>>>>>(value: LocalizedStringKey) -> MarkUpQuote {
+public prefix func >>>>>>(value: LocalizedStringKey) -> MarkUpQuote {
     return .init(value, level: .six)
 }

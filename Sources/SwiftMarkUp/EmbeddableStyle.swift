@@ -12,20 +12,20 @@ prefix operator *
 prefix operator **
 prefix operator ***
 
-prefix func * (value: LocalizedStringKey) -> StyledTexts.Italic {
+public prefix func * (value: LocalizedStringKey) -> StyledTexts.Italic {
     return .init(value: value)
 }
-prefix func ** (value: LocalizedStringKey) -> StyledTexts.Bold {
+public prefix func ** (value: LocalizedStringKey) -> StyledTexts.Bold {
     return .init(value: value)
 }
-prefix func *** (value: LocalizedStringKey) -> StyledTexts.BoldItalic {
+public prefix func *** (value: LocalizedStringKey) -> StyledTexts.BoldItalic {
     return .init(value: value)
 }
 
 infix operator |
 
 @available(iOS 15, macOS 12, watchOS 8, tvOS 15, *)
-func | (lhs: String, rhs: String) -> StyledTexts.Link {
+public func | (lhs: String, rhs: String) -> StyledTexts.Link {
     var attributedString = AttributedString(lhs)
     let range = Range(uncheckedBounds: (attributedString.startIndex, attributedString.endIndex))
     attributedString[range].link = URL(string: rhs)
@@ -33,13 +33,13 @@ func | (lhs: String, rhs: String) -> StyledTexts.Link {
 }
 
 prefix operator </>
-prefix func </>(value: LocalizedStringKey) -> StyledTexts.Code {
+public prefix func </>(value: LocalizedStringKey) -> StyledTexts.Code {
     return .init(code: Text(value))
 }
 
 infix operator </>
 @available(iOS 15, macOS 12, watchOS 8, tvOS 15, *)
-func </>(language: String, code: String) -> StyledTexts.Code {
+public func </>(language: String, code: String) -> StyledTexts.Code {
     switch language {
     case "swift":
         let highlighted = SyntaxHighlighter(parser: .swift).highlight(code: code, design: .swiftDefault)
@@ -48,52 +48,52 @@ func </>(language: String, code: String) -> StyledTexts.Code {
     }
 }
 
-protocol EmbeddableText {
+public protocol EmbeddableText {
     func appendInterpolation(to interpolation: inout LocalizedStringKey.StringInterpolation)
 }
 
-enum StyledTexts {
-    struct Bold: MarkUpView, EmbeddableText {
+public enum StyledTexts {
+    public struct Bold: MarkUpView, EmbeddableText {
         let value: LocalizedStringKey
-        func appendInterpolation(to interpolation: inout LocalizedStringKey.StringInterpolation) {
+        public func appendInterpolation(to interpolation: inout LocalizedStringKey.StringInterpolation) {
             interpolation.appendInterpolation(body)
         }
-        var body: Text {
+        public var body: Text {
             Text(value).bold()
         }
     }
-    struct Italic: MarkUpView, EmbeddableText {
-        typealias Body = Text
+    public struct Italic: MarkUpView, EmbeddableText {
+        public typealias Body = Text
         let value: LocalizedStringKey
-        func appendInterpolation(to interpolation: inout LocalizedStringKey.StringInterpolation) {
+        public func appendInterpolation(to interpolation: inout LocalizedStringKey.StringInterpolation) {
             interpolation.appendInterpolation(body)
         }
-        var body: Text {
+        public var body: Text {
             Text(value).italic()
         }
     }
-    struct BoldItalic: MarkUpView, EmbeddableText {
-        typealias Body = Text
+    public struct BoldItalic: MarkUpView, EmbeddableText {
+        public typealias Body = Text
         let value: LocalizedStringKey
-        func appendInterpolation(to interpolation: inout LocalizedStringKey.StringInterpolation) {
+        public func appendInterpolation(to interpolation: inout LocalizedStringKey.StringInterpolation) {
             interpolation.appendInterpolation(body)
         }
-        var body: Text {
+        public var body: Text {
             Text(value).bold().italic()
         }
     }
     @available(iOS 15, macOS 12, watchOS 8, tvOS 15, *)
-    struct Link: MarkUpView, EmbeddableText {
-        typealias Body = Text
+    public struct Link: MarkUpView, EmbeddableText {
+        public typealias Body = Text
         let link: AttributedString
-        func appendInterpolation(to interpolation: inout LocalizedStringKey.StringInterpolation) {
+        public func appendInterpolation(to interpolation: inout LocalizedStringKey.StringInterpolation) {
             interpolation.appendInterpolation(link)
         }
-        var body: Text {
+        public var body: Text {
             Text(link)
         }
     }
-    struct Code: MarkUpView, EmbeddableText {
+    public struct Code: MarkUpView, EmbeddableText {
         @Environment(\.colorScheme) private var colorScheme
         private var backgroundColor: Color {
             switch colorScheme {
@@ -106,11 +106,11 @@ enum StyledTexts {
             }
         }
         let code: Text
-        func appendInterpolation(to interpolation: inout LocalizedStringKey.StringInterpolation) {
+        public func appendInterpolation(to interpolation: inout LocalizedStringKey.StringInterpolation) {
             let font: Font = .system(.body, design: .monospaced)
             interpolation.appendInterpolation(code.font(font))
         }
-        var body: some View {
+        public var body: some View {
             ScrollView(.horizontal) {
                 code
                     .font(.system(.body, design: .monospaced))
@@ -121,7 +121,7 @@ enum StyledTexts {
     }
 }
 
-extension LocalizedStringKey.StringInterpolation {
+public extension LocalizedStringKey.StringInterpolation {
     mutating func appendInterpolation<T: EmbeddableText>(_ text: T) {
         text.appendInterpolation(to: &self)
     }
