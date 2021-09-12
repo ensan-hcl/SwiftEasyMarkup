@@ -9,9 +9,9 @@ import Foundation
 import SwiftUI
 
 @available(iOS 15, macOS 12, watchOS 8, tvOS 15, *)
-struct SyntaxHighlighter<Parser: SyntaxParser> {
+public struct SyntaxHighlighter<Parser: SyntaxParser> {
     private var parser: Parser
-    init(parser: Parser) {
+    public init(parser: Parser) {
         self.parser = parser
     }
     func highlight<Design: SyntaxHighlightDesign>(code: String, design: Design) -> AttributedString where Design.Token == Parser.SemanticToken {
@@ -20,7 +20,7 @@ struct SyntaxHighlighter<Parser: SyntaxParser> {
     }
 }
 
-protocol SyntaxParser {
+public protocol SyntaxParser {
     associatedtype LexicalToken: SyntaxParserLexicalToken
     associatedtype SemanticToken
     static var parseOrder: [LexicalToken] { get }
@@ -29,18 +29,18 @@ protocol SyntaxParser {
     func parse(code: String) -> [(token: SemanticToken, string: String)]
 }
 
-protocol SyntaxParserLexicalToken {
+public protocol SyntaxParserLexicalToken {
     var necessaryRegularExpression: String { get }
 }
 
 @available(iOS 15, macOS 12, watchOS 8, tvOS 15, *)
-protocol SyntaxHighlightDesign {
+public protocol SyntaxHighlightDesign {
     associatedtype Token
     func attribute(token: Token, string: String) -> AttributedString
 }
 
 
-extension SyntaxParser {
+public extension SyntaxParser {
     func parse(code: String) -> [(token: SemanticToken, string: String)] {
         var substring = code[...]
         var lexicalTokens: [(LexicalToken, String)] = []

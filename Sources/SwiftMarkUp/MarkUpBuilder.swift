@@ -7,26 +7,26 @@
 
 import SwiftUI
 
-struct MarkUp<Content: MarkUpView>: View {
+public struct MarkUp<Content: MarkUpView>: View {
     private var alignment: HorizontalAlignment
     private var contents: () -> Content
-    init(alignment: HorizontalAlignment = .center, @MarkUpBuilder contents: @escaping () -> Content) {
+    public init(alignment: HorizontalAlignment = .center, @MarkUpBuilder contents: @escaping () -> Content) {
         self.alignment = alignment
         self.contents = contents
     }
-    var body: some View {
+    public var body: some View {
         VStack (alignment: alignment) {
             contents()
         }
     }
 }
 
-protocol MarkUpView: View {}
+public protocol MarkUpView: View {}
 
 extension Group: MarkUpView where Content: View {}
 
 @resultBuilder
-struct MarkUpBuilder {
+public struct MarkUpBuilder {
     static func buildBlock<T0: MarkUpView> (_ t0: T0) -> some MarkUpView {
         return t0
     }

@@ -7,23 +7,23 @@
 
 import Foundation
 
-extension SyntaxParser where Self == SwiftParser {
+public extension SyntaxParser where Self == SwiftParser {
     static var swift: Self {
         Self()
     }
 }
 
 @available(iOS 15, macOS 12, watchOS 8, tvOS 15, *)
-extension SyntaxHighlightDesign where Self == SwiftParser.DefaultDesign {
+public extension SyntaxHighlightDesign where Self == SwiftParser.DefaultDesign {
     static var swiftDefault: Self {
         Self()
     }
 }
 
-struct SwiftParser: SyntaxParser {
+public struct SwiftParser: SyntaxParser {
     @available(iOS 15, macOS 12, watchOS 8, tvOS 15, *)
-    struct DefaultDesign: SyntaxHighlightDesign {
-        func attribute(token: SemanticToken, string: String) -> AttributedString {
+    public struct DefaultDesign: SyntaxHighlightDesign {
+        public func attribute(token: SemanticToken, string: String) -> AttributedString {
             var attributedString = AttributedString(string)
             switch token {
             case .comment:
@@ -48,7 +48,7 @@ struct SwiftParser: SyntaxParser {
         }
     }
 
-    enum LexicalToken: SyntaxParserLexicalToken {
+    public enum LexicalToken: SyntaxParserLexicalToken {
         case comment                  // コメント
         case identifier       // 型に近いものの名前
         case string                   // 文字列
@@ -75,7 +75,7 @@ struct SwiftParser: SyntaxParser {
         ]
 
         // reference: https://docs.swift.org/swift-book/ReferenceManual/LexicalStructure.html
-        var necessaryRegularExpression: String {
+        public var necessaryRegularExpression: String {
             switch self {
             case .comment:
                 // //を用いたコメント、/**/に対応。厳密にはネストしたコメントに対処する必要がある
@@ -142,7 +142,7 @@ struct SwiftParser: SyntaxParser {
         }
 
     }
-    enum SemanticToken {
+    public enum SemanticToken {
         case comment                  // コメント
         case valueIdentifier          // 変数の名前
         case typelikeIdentifier       // 型に近いものの名前
@@ -155,8 +155,8 @@ struct SwiftParser: SyntaxParser {
         case attribute                // 属性
         case unknown                  // 不明
     }
-    static var parseOrder: [LexicalToken] = [.comment, .string, .number, .operator, .keyword, .attribute, .identifier, .delimiter, .parenthesis, .unknown]
-    static func createList(from lexicalTokens: [(token: LexicalToken, string: String)]) -> [(token: SemanticToken, string: String)] {
+    public static var parseOrder: [LexicalToken] = [.comment, .string, .number, .operator, .keyword, .attribute, .identifier, .delimiter, .parenthesis, .unknown]
+    public static func createList(from lexicalTokens: [(token: LexicalToken, string: String)]) -> [(token: SemanticToken, string: String)] {
         return lexicalTokens.map { token, string in
             let semanticToken: SemanticToken
             switch token {
