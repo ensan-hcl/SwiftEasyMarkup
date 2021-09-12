@@ -93,13 +93,12 @@ public struct SwiftParser: SyntaxParser {
                 // \nでない\"または\+何かの連続であり、最後は"または改行
                 /*
                  let normalString = #""([^\\"\n]|\\.)*["|\n]"#
-                 let multilineString = #""""[^]*?["""|\n]"#
-                 let sharpstring = "#".*"#"
-
-                 let stringLiteral "(\(sharpstring))|(\(multilineString))|\(normalString)"
+                 let multilineString = #""""[\s\S]*?["""|\n]"#
+                 let sharpstring = ##"#+".*"#+"##
+                 let stringLiteral = "(\(sharpstring))|(\(multilineString))|(\(normalString))"
                  */
                 // 参考: https://refluxflow.blogspot.com/2007/09/blog-post.html
-                return ##"(#".*"#)|(\"\"\"[\\s\\S]*?[\"\"\"|\\n])|\"([^\\\\\"\\n]|\\\\.)*[\"|\\n]"##
+                return ##"(#+".*"#+)|("""[\s\S]*?["""|\n])|("([^\\"\n]|\\.)*["|\n])"##
             case .number:
                 /*
                  let binaryLiteral = "0b[01][01_]*"
