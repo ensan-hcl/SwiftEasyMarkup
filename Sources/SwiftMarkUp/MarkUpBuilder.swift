@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct MarkUp<Content: MarkUpView>: View {
+public struct MarkUp<Content: MarkUpView>: MarkUpView {
     private var alignment: HorizontalAlignment
     private var contents: () -> Content
     public init(alignment: HorizontalAlignment = .center, @MarkUpBuilder contents: @escaping () -> Content) {
@@ -24,6 +24,7 @@ public struct MarkUp<Content: MarkUpView>: View {
 public protocol MarkUpView: View {}
 
 extension EmptyView: MarkUpView {}
+extension AnyView: MarkUpView {}
 extension Group: MarkUpView where Content: View {}
 public struct _EitherView<First: MarkUpView, Second: MarkUpView>: MarkUpView  {
     enum Either {
@@ -177,8 +178,8 @@ public struct MarkUpBuilder {
         }
     }
 
-    public static func buildLimitedAvailability<T0: MarkUpView>(_ t0: T0) -> T0 {
-        return t0
+    public static func buildLimitedAvailability<T0: MarkUpView>(_ t0: T0) -> AnyView {
+        return AnyView(t0)
     }
 
     public static func buildExpression(_ expression: LocalizedStringKey) -> MarkUpText {

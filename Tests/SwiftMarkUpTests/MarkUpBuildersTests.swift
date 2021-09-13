@@ -15,7 +15,7 @@ final class MarkUpBuildersTests: XCTestCase {
             }
 
             // MARK: Check emphasis operators
-            if #available(iOS 15, macOS 12, watchOS 8, tvOS 15, *) {
+            MarkUp {
                 *"foo"
                 "\(*"foo")"
 
@@ -34,7 +34,7 @@ final class MarkUpBuildersTests: XCTestCase {
             }
 
             // MARK: Check tab operators
-            if #available(iOS 15, macOS 12, watchOS 8, tvOS 15, *) {
+            MarkUp {
                 |"foo"
                 ||"foo"
                 |||"foo"
@@ -42,9 +42,8 @@ final class MarkUpBuildersTests: XCTestCase {
                 |||||"foo"
                 ||||||"foo"
             }
-
             // MARK: Check header operators
-            if #available(iOS 15, macOS 12, watchOS 8, tvOS 15, *) {
+            MarkUp {
                 -"foo"
                 --"foo"
                 ---"foo"
@@ -54,7 +53,7 @@ final class MarkUpBuildersTests: XCTestCase {
             }
 
             // MARK: Check quote operators
-            if #available(iOS 15, macOS 12, watchOS 8, tvOS 15, *) {
+            MarkUp {
                 >"foo"
                 >>"foo"
                 >>>"foo"
