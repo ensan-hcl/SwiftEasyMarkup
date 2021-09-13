@@ -1,7 +1,9 @@
 import XCTest
 @testable import SwiftMarkUp
 
-final class SwiftSyntaxHighlightTests: XCTestCase {
+// reference: https://docs.swift.org/swift-book/ReferenceManual/LexicalStructure.html
+
+final class SwiftSyntaxParserTests: XCTestCase {
     func firstMatch(of string: String, regexp: String) -> String {
         if let range = string.range(of: regexp, options: [.regularExpression]) {
             return String(string[range])

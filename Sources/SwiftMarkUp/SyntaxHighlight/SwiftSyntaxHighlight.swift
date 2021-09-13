@@ -60,7 +60,7 @@ public struct SwiftParser: SyntaxParser {
         case attribute                // 属性
         case unknown                  // 不明
 
-        // reference: https://docs.swift.org/swift-book/ReferenceManual/LexicalStructure.html
+        // Rationale: In order to know how these expressions are generated, see Tests/SwiftMarkUpTests/SwiftSyntaxParserTests.swift
         public var necessaryRegularExpression: String {
             switch self {
             case .comment:
