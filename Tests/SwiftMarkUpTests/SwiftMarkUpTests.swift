@@ -9,6 +9,46 @@ final class SwiftSyntaxHighlightTests: XCTestCase {
         return ""
     }
 
+    func testKeywordsExpression() throws {
+        let keywords = [
+            // special value relating keywords
+            "true", "false", "nil", "self", "super",
+
+            // special type relating keywords
+            "Any", "Type", "Protocol", "Self",
+
+            // type relating keywords
+            "struct", "class", "enum", "actor", "protocol", "where", "extension", "associatedtype", "typealias",
+
+            // access controls
+            "private", "fileprivate", "internal", "public", "open",
+
+            // declaration of functions/values relating keywords
+            "var", "let", "case", "lazy", "weak", "static", "dynamic", "get", "set", "didSet", "willSet", "inout", "func", "throws", "rethrows", "async", "mutating", "nonmutating", "isolated", "nonisolated", "some", "init", "deinit", "convenience", "required", "subscript", "indirect", "final", "override", "optional",
+
+            // statements
+            "while", "if", "for", "in", "guard", "switch", "catch", "do", "defer", "default", "fallthrough", "continue", "break", "repeat", "import", "await", "try", "return", "throw",
+
+            // operator relating keywords
+            "as", "is", "prefix", "infix", "postfix", "operator", "precedencgroup", "associativity", "left", "right",
+
+            // #literal
+            "#available", "#colorLiteral", "#column", "#else", "#elseif", "#endif", "#error", "#file", "#fileLiteral", "#function", "#if", "#imageLiteral", "#line", "#selector", "#sourceLocation", "#warning",
+
+            // attributes
+            "@autoclosure", "@escaping", "@nonescaping", "@propertyWrapper", "@testable", "@frozen", "@main", "@unknown", "@resultBuilder", "@inlinable", "@usableFromInline", "@available", "@dynamicMemberLookup", "@dynamicCallable", "@objc", "@nonobjc", "@objcMembers", "@convention", "@discardableResult", "@IBAction", "@IBOutlet", "@IBDesignable", "@IBInspectable", "@GKInspectable", "@UIApplicationMain", "@NSApplicationMain", "@NSCopying", "@NSManaged", "@requires_stored_property_inits", "@warn_unqualified_access"
+        ]
+        let keywordExpression = Array(Set(keywords)).sorted().joined(separator: "|")
+
+        // MARK: Check whether expression is correctly constructed
+        let expression = SwiftParser.LexicalToken.keyword.necessaryRegularExpression
+        XCTAssertEqual(expression, keywordExpression)
+
+        if expression != keywordExpression {
+            print("Fix it: set SwiftParser.LexicalToken.keyword.necessaryRegularExpression as \(keywordExpression)")
+        }
+    }
+
     func testOperatorexpression() throws {
         let operatorHead = "/=\\-\\+\\!\\*%<>&|\\^~\\?\u{00A1}-\u{00A7}\u{00A9}-\u{00AB}\u{00AC}-\u{00AE}\u{00B0}-\u{00B1}\u{00B6}\u{00BB}\u{00BF}\u{00D7}\u{00F7}\u{2016}-\u{2017}\u{2020}-\u{2027}\u{2030}-\u{203E}\u{2041}-\u{2053}\u{2055}-\u{205E}\u{2190}-\u{23FF}\u{2500}-\u{2775}\u{2794}-\u{2BFF}\u{2E00}-\u{2E7F}\u{3001}-\u{3003}\u{3008}-\u{3020}\u{3030}"
         let operatorCharacter = "\(operatorHead)\u{0300}-\u{036F}\u{1DC0}-\u{1DFF}\u{20D0}-\u{20FF}\u{FE00}-\u{FE0F}\u{FE20}-\u{FE2F}\u{E0100}-\u{E01EF}"

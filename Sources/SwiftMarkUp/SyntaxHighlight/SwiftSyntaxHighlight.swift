@@ -60,20 +60,6 @@ public struct SwiftParser: SyntaxParser {
         case attribute                // 属性
         case unknown                  // 不明
 
-        static var keywords = [
-            "Any", "Type", ".Protocol", "Self",
-            "true", "false", "nil", "self",
-            "struct", "class", "enum", "actor", "protocol", "where", "extension", "associatedtype", "typealias", "some",
-            "var", "let", "case", "lazy", "weak", "static", "dynamic", "get", "set", "didSet", "willSet", "inout",
-            "func", "return", "throw", "throws", "rethrows", "try", "async", "await", "mutating", "nonmutating", "isolated", "nonisolated",
-            "init", "deinit", "convenience", "required", "subscript", "indirect",
-            "private", "fileprivate", "internal", "public", "open", "final", "override", "super", "optional",
-            "while", "if", "for", "in", "guard", "switch", "catch", "do", "defer", "default", "fallthrough", "continue", "break", "as", "is", "repeat", "import",
-            "prefix", "infix", "postfix", "operator", "precedencgroup", "associativity", "left", "right",
-            "#available", "#colorLiteral", "#column", "#else", "#elseif", "#endif", "#error", "#file", "#fileLiteral", "#function", "#if", "#imageLiteral", "#line", "#selector", "#sourceLocation", "#warning",
-            "@autoclosure", "@escaping", "@nonescaping", "@propertyWrapper", "@testable", "@frozen", "@main", "@unknown", "@resultBuilder", "@inlinable", "@usableFromInline", "@available", "@dynamicMemberLookup", "@dynamicCallable", "@objc", "@nonobjc", "@objcMembers", "@convention", "@discardableResult", "@IBAction", "@IBOutlet", "@IBDesignable", "@IBInspectable", "@GKInspectable", "@UIApplicationMain", "@NSApplicationMain", "@NSCopying", "@NSManaged", "@requires_stored_property_inits", "@warn_unqualified_access"
-        ]
-
         // reference: https://docs.swift.org/swift-book/ReferenceManual/LexicalStructure.html
         public var necessaryRegularExpression: String {
             switch self {
@@ -96,7 +82,7 @@ public struct SwiftParser: SyntaxParser {
             case .operator:
                 return "([/=\\-\\+\\!\\*%<>&|\\^~\\?¡-§©-«¬-®°-±¶»¿×÷‖-‗†-‧‰-‾⁁-⁓⁕-⁞←-⏿─-❵➔-⯿⸀-⹿、-〃〈-〠〰][/=\\-\\+\\!\\*%<>&|\\^~\\?¡-§©-«¬-®°-±¶»¿×÷‖-‗†-‧‰-‾⁁-⁓⁕-⁞←-⏿─-❵➔-⯿⸀-⹿、-〃〈-〠〰̀-ͯ᷀-᷿⃐-⃿︀-️︠-︯󠄀-󠇯]*)|(\\.[\\./=\\-\\+\\!\\*%<>&|\\^~\\?¡-§©-«¬-®°-±¶»¿×÷‖-‗†-‧‰-‾⁁-⁓⁕-⁞←-⏿─-❵➔-⯿⸀-⹿、-〃〈-〠〰̀-ͯ᷀-᷿⃐-⃿︀-️︠-︯󠄀-󠇯]*)"
             case .keyword:
-                return Self.keywords.joined(separator: "|")
+                return "#available|#colorLiteral|#column|#else|#elseif|#endif|#error|#file|#fileLiteral|#function|#if|#imageLiteral|#line|#selector|#sourceLocation|#warning|@GKInspectable|@IBAction|@IBDesignable|@IBInspectable|@IBOutlet|@NSApplicationMain|@NSCopying|@NSManaged|@UIApplicationMain|@autoclosure|@available|@convention|@discardableResult|@dynamicCallable|@dynamicMemberLookup|@escaping|@frozen|@inlinable|@main|@nonescaping|@nonobjc|@objc|@objcMembers|@propertyWrapper|@requires_stored_property_inits|@resultBuilder|@testable|@unknown|@usableFromInline|@warn_unqualified_access|Any|Protocol|Self|Type|actor|as|associatedtype|associativity|async|await|break|case|catch|class|continue|convenience|default|defer|deinit|didSet|do|dynamic|enum|extension|fallthrough|false|fileprivate|final|for|func|get|guard|if|import|in|indirect|infix|init|inout|internal|is|isolated|lazy|left|let|mutating|nil|nonisolated|nonmutating|open|operator|optional|override|postfix|precedencgroup|prefix|private|protocol|public|repeat|required|rethrows|return|right|self|set|some|static|struct|subscript|super|switch|throw|throws|true|try|typealias|var|weak|where|while|willSet"
             case .parenthesis:
                 return #"[<\(\[{}\])>]"#
             case .delimiter:
