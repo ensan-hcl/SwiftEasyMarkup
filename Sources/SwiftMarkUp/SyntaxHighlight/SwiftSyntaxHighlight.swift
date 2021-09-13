@@ -60,78 +60,23 @@ public struct SwiftParser: SyntaxParser {
         case attribute                // 属性
         case unknown                  // 不明
 
-        static var keywords = [
-            "Any", "Type", ".Protocol", "Self",
-            "true", "false", "nil", "self",
-            "struct", "class", "enum", "actor", "protocol", "where", "extension", "associatedtype", "typealias", "some",
-            "var", "let", "case", "lazy", "weak", "static", "dynamic", "get", "set", "didSet", "willSet", "inout",
-            "func", "return", "throw", "throws", "rethrows", "try", "async", "await", "mutating", "nonmutating", "isolated", "nonisolated",
-            "init", "deinit", "convenience", "required", "subscript", "indirect",
-            "private", "fileprivate", "internal", "public", "open", "final", "override", "super", "optional",
-            "while", "if", "for", "in", "guard", "switch", "catch", "do", "defer", "default", "fallthrough", "continue", "break", "as", "is", "repeat", "import",
-            "prefix", "infix", "postfix", "operator", "precedencgroup", "associativity", "left", "right",
-            "#available", "#colorLiteral", "#column", "#else", "#elseif", "#endif", "#error", "#file", "#fileLiteral", "#function", "#if", "#imageLiteral", "#line", "#selector", "#sourceLocation", "#warning",
-            "@autoclosure", "@escaping", "@nonescaping", "@propertyWrapper", "@testable", "@frozen", "@main", "@unknown", "@resultBuilder", "@inlinable", "@usableFromInline", "@available", "@dynamicMemberLookup", "@dynamicCallable", "@objc", "@nonobjc", "@objcMembers", "@convention", "@discardableResult", "@IBAction", "@IBOutlet", "@IBDesignable", "@IBInspectable", "@GKInspectable", "@UIApplicationMain", "@NSApplicationMain", "@NSCopying", "@NSManaged", "@requires_stored_property_inits", "@warn_unqualified_access"
-        ]
-
-        // reference: https://docs.swift.org/swift-book/ReferenceManual/LexicalStructure.html
+        // Rationale: In order to know how these expressions are generated, see Tests/SwiftMarkUpTests/SwiftSyntaxParserTests.swift
         public var necessaryRegularExpression: String {
             switch self {
             case .comment:
-                // //を用いたコメント、/**/に対応。厳密にはネストしたコメントに対処する必要がある
                 return #"(/\*[\\s\\S]*?\*/)|(//.*)"#
             case .identifier:
-                // valueとtypeでは識別子の種類は一緒
-                let identifierHead =
-                "a-zA-Z_\u{00A8}\u{00AA}\u{00AF}\u{00B2}-\u{00B5}\u{00B7}-\u{00BA}\u{00BC}-\u{00BE}\u{00C0}-\u{00D6}\u{00D8}-\u{00F6}\u{00F8}-\u{00FF}\u{0100}-\u{02FF}\u{0370}-\u{167F}\u{1681}-\u{180D}\u{180F}-\u{1DBF}\u{1E00}-\u{1FFF}\u{200B}-\u{200D}\u{202A}-\u{202E}\u{203F}-\u{2040}\u{2054}\u{2060}-\u{206F}\u{2070}-\u{20CF}\u{2100}-\u{218F}\u{2460}-\u{24FF}\u{2776}-\u{2793}\u{2C00}-\u{2DFF}\u{2E80}-\u{2FFF}\u{3004}-\u{3007}\u{3021}-\u{302F}\u{3031}-\u{303F}\u{3040}-\u{D7FF}\u{F900}-\u{FD3D}\u{FD40}-\u{FDCF}\u{FDF0}-\u{FE1F}\u{FE30}-\u{FE44}\u{FE47}-\u{FFFD}\u{10000}-\u{1FFFD}\u{20000}-\u{2FFFD}\u{30000}-\u{3FFFD}\u{40000}-\u{4FFFD}\u{50000}-\u{5FFFD}\u{60000}-\u{6FFFD}\u{70000}-\u{7FFFD}\u{80000}-\u{8FFFD}\u{90000}-\u{9FFFD}\u{A0000}-\u{AFFFD}\u{B0000}-\u{BFFFD}\u{C0000}-\u{CFFFD}\u{D0000}-\u{DFFFD}\u{E0000}-\u{FFFFD}"
-                let identifierCharacter = "\(identifierHead)0-9\u{0300}-\u{036F}\u{1DC9}-\u{1DFF}\u{20D0}-\u{20FF}\u{FE20}-\u{FE2F}"
-                let identifier = "\\$[0-9]+|\\$[\(identifierCharacter)]+|`[\(identifierHead)][\(identifierCharacter)]*`|[\(identifierHead)][\(identifierCharacter)]*"
-                return identifier
+                return "\\$[0-9]+|\\$[a-zA-Z_\u{00A8}\u{00AA}\u{00AF}\u{00B2}-\u{00B5}\u{00B7}-\u{00BA}\u{00BC}-\u{00BE}\u{00C0}-\u{00D6}\u{00D8}-\u{00F6}\u{00F8}-\u{00FF}\u{0100}-\u{02FF}\u{0370}-\u{167F}\u{1681}-\u{180D}\u{180F}-\u{1DBF}\u{1E00}-\u{1FFF}\u{200B}-\u{200D}\u{202A}-\u{202E}\u{203F}-\u{2040}\u{2054}\u{2060}-\u{206F}\u{2070}-\u{20CF}\u{2100}-\u{218F}\u{2460}-\u{24FF}\u{2776}-\u{2793}\u{2C00}-\u{2DFF}\u{2E80}-\u{2FFF}\u{3004}-\u{3007}\u{3021}-\u{302F}\u{3031}-\u{303F}\u{3040}-\u{D7FF}\u{F900}-\u{FD3D}\u{FD40}-\u{FDCF}\u{FDF0}-\u{FE1F}\u{FE30}-\u{FE44}\u{FE47}-\u{FFFD}\u{00010000}-\u{0001FFFD}\u{00020000}-\u{0002FFFD}\u{00030000}-\u{0003FFFD}\u{00040000}-\u{0004FFFD}\u{00050000}-\u{0005FFFD}\u{00060000}-\u{0006FFFD}\u{00070000}-\u{0007FFFD}\u{00080000}-\u{0008FFFD}\u{00090000}-\u{0009FFFD}\u{000A0000}-\u{000AFFFD}\u{000B0000}-\u{000BFFFD}\u{000C0000}-\u{000CFFFD}\u{000D0000}-\u{000DFFFD}\u{000E0000}-\u{000FFFFD}0-9\u{0300}-\u{036F}\u{1DC9}-\u{1DFF}\u{20D0}-\u{20FF}\u{FE20}-\u{FE2F}]+|`[a-zA-Z_\u{00A8}\u{00AA}\u{00AF}\u{00B2}-\u{00B5}\u{00B7}-\u{00BA}\u{00BC}-\u{00BE}\u{00C0}-\u{00D6}\u{00D8}-\u{00F6}\u{00F8}-\u{00FF}\u{0100}-\u{02FF}\u{0370}-\u{167F}\u{1681}-\u{180D}\u{180F}-\u{1DBF}\u{1E00}-\u{1FFF}\u{200B}-\u{200D}\u{202A}-\u{202E}\u{203F}-\u{2040}\u{2054}\u{2060}-\u{206F}\u{2070}-\u{20CF}\u{2100}-\u{218F}\u{2460}-\u{24FF}\u{2776}-\u{2793}\u{2C00}-\u{2DFF}\u{2E80}-\u{2FFF}\u{3004}-\u{3007}\u{3021}-\u{302F}\u{3031}-\u{303F}\u{3040}-\u{D7FF}\u{F900}-\u{FD3D}\u{FD40}-\u{FDCF}\u{FDF0}-\u{FE1F}\u{FE30}-\u{FE44}\u{FE47}-\u{FFFD}\u{00010000}-\u{0001FFFD}\u{00020000}-\u{0002FFFD}\u{00030000}-\u{0003FFFD}\u{00040000}-\u{0004FFFD}\u{00050000}-\u{0005FFFD}\u{00060000}-\u{0006FFFD}\u{00070000}-\u{0007FFFD}\u{00080000}-\u{0008FFFD}\u{00090000}-\u{0009FFFD}\u{000A0000}-\u{000AFFFD}\u{000B0000}-\u{000BFFFD}\u{000C0000}-\u{000CFFFD}\u{000D0000}-\u{000DFFFD}\u{000E0000}-\u{000FFFFD}][a-zA-Z_\u{00A8}\u{00AA}\u{00AF}\u{00B2}-\u{00B5}\u{00B7}-\u{00BA}\u{00BC}-\u{00BE}\u{00C0}-\u{00D6}\u{00D8}-\u{00F6}\u{00F8}-\u{00FF}\u{0100}-\u{02FF}\u{0370}-\u{167F}\u{1681}-\u{180D}\u{180F}-\u{1DBF}\u{1E00}-\u{1FFF}\u{200B}-\u{200D}\u{202A}-\u{202E}\u{203F}-\u{2040}\u{2054}\u{2060}-\u{206F}\u{2070}-\u{20CF}\u{2100}-\u{218F}\u{2460}-\u{24FF}\u{2776}-\u{2793}\u{2C00}-\u{2DFF}\u{2E80}-\u{2FFF}\u{3004}-\u{3007}\u{3021}-\u{302F}\u{3031}-\u{303F}\u{3040}-\u{D7FF}\u{F900}-\u{FD3D}\u{FD40}-\u{FDCF}\u{FDF0}-\u{FE1F}\u{FE30}-\u{FE44}\u{FE47}-\u{FFFD}\u{00010000}-\u{0001FFFD}\u{00020000}-\u{0002FFFD}\u{00030000}-\u{0003FFFD}\u{00040000}-\u{0004FFFD}\u{00050000}-\u{0005FFFD}\u{00060000}-\u{0006FFFD}\u{00070000}-\u{0007FFFD}\u{00080000}-\u{0008FFFD}\u{00090000}-\u{0009FFFD}\u{000A0000}-\u{000AFFFD}\u{000B0000}-\u{000BFFFD}\u{000C0000}-\u{000CFFFD}\u{000D0000}-\u{000DFFFD}\u{000E0000}-\u{000FFFFD}0-9\u{0300}-\u{036F}\u{1DC9}-\u{1DFF}\u{20D0}-\u{20FF}\u{FE20}-\u{FE2F}]*`|[a-zA-Z_\u{00A8}\u{00AA}\u{00AF}\u{00B2}-\u{00B5}\u{00B7}-\u{00BA}\u{00BC}-\u{00BE}\u{00C0}-\u{00D6}\u{00D8}-\u{00F6}\u{00F8}-\u{00FF}\u{0100}-\u{02FF}\u{0370}-\u{167F}\u{1681}-\u{180D}\u{180F}-\u{1DBF}\u{1E00}-\u{1FFF}\u{200B}-\u{200D}\u{202A}-\u{202E}\u{203F}-\u{2040}\u{2054}\u{2060}-\u{206F}\u{2070}-\u{20CF}\u{2100}-\u{218F}\u{2460}-\u{24FF}\u{2776}-\u{2793}\u{2C00}-\u{2DFF}\u{2E80}-\u{2FFF}\u{3004}-\u{3007}\u{3021}-\u{302F}\u{3031}-\u{303F}\u{3040}-\u{D7FF}\u{F900}-\u{FD3D}\u{FD40}-\u{FDCF}\u{FDF0}-\u{FE1F}\u{FE30}-\u{FE44}\u{FE47}-\u{FFFD}\u{00010000}-\u{0001FFFD}\u{00020000}-\u{0002FFFD}\u{00030000}-\u{0003FFFD}\u{00040000}-\u{0004FFFD}\u{00050000}-\u{0005FFFD}\u{00060000}-\u{0006FFFD}\u{00070000}-\u{0007FFFD}\u{00080000}-\u{0008FFFD}\u{00090000}-\u{0009FFFD}\u{000A0000}-\u{000AFFFD}\u{000B0000}-\u{000BFFFD}\u{000C0000}-\u{000CFFFD}\u{000D0000}-\u{000DFFFD}\u{000E0000}-\u{000FFFFD}][a-zA-Z_\u{00A8}\u{00AA}\u{00AF}\u{00B2}-\u{00B5}\u{00B7}-\u{00BA}\u{00BC}-\u{00BE}\u{00C0}-\u{00D6}\u{00D8}-\u{00F6}\u{00F8}-\u{00FF}\u{0100}-\u{02FF}\u{0370}-\u{167F}\u{1681}-\u{180D}\u{180F}-\u{1DBF}\u{1E00}-\u{1FFF}\u{200B}-\u{200D}\u{202A}-\u{202E}\u{203F}-\u{2040}\u{2054}\u{2060}-\u{206F}\u{2070}-\u{20CF}\u{2100}-\u{218F}\u{2460}-\u{24FF}\u{2776}-\u{2793}\u{2C00}-\u{2DFF}\u{2E80}-\u{2FFF}\u{3004}-\u{3007}\u{3021}-\u{302F}\u{3031}-\u{303F}\u{3040}-\u{D7FF}\u{F900}-\u{FD3D}\u{FD40}-\u{FDCF}\u{FDF0}-\u{FE1F}\u{FE30}-\u{FE44}\u{FE47}-\u{FFFD}\u{00010000}-\u{0001FFFD}\u{00020000}-\u{0002FFFD}\u{00030000}-\u{0003FFFD}\u{00040000}-\u{0004FFFD}\u{00050000}-\u{0005FFFD}\u{00060000}-\u{0006FFFD}\u{00070000}-\u{0007FFFD}\u{00080000}-\u{0008FFFD}\u{00090000}-\u{0009FFFD}\u{000A0000}-\u{000AFFFD}\u{000B0000}-\u{000BFFFD}\u{000C0000}-\u{000CFFFD}\u{000D0000}-\u{000DFFFD}\u{000E0000}-\u{000FFFFD}0-9\u{0300}-\u{036F}\u{1DC9}-\u{1DFF}\u{20D0}-\u{20FF}\u{FE20}-\u{FE2F}]*"
             case .attribute:
                 return "@(\(Self.identifier.necessaryRegularExpression))"
             case .string:
-                // \nでない\"または\+何かの連続であり、最後は"または改行
-                /*
-                 let normalString = #""([^\\"\n]|\\.)*["|\n]"#
-                 let multilineString = #""""[^]*?["""|\n]"#
-                 let sharpstring = "#".*"#"
-
-                 let stringLiteral "(\(sharpstring))|(\(multilineString))|\(normalString)"
-                 */
-                // 参考: https://refluxflow.blogspot.com/2007/09/blog-post.html
-                return ##"(#".*"#)|(\"\"\"[\\s\\S]*?[\"\"\"|\\n])|\"([^\\\\\"\\n]|\\\\.)*[\"|\\n]"##
+                return ##"(#+".*"#+)|("""[\s\S]*?["""|\n])|("([^\\"\n]|\\.)*["|\n])"##
             case .number:
-                /*
-                 let binaryLiteral = "0b[01][01_]*"
-                 let octalLiteral = "0o[0-7][0-7_]*"
-                 let decimalLiteral = "[0-9][0-9_]*"
-                 let hexadecimalLiteral = "0x[0-9A-Fa-f][0-9A-Fa-f_]*"
-                 let integerLiteral = "\(binaryLiteral)|\(octalLiteral)|\(hexadecimalLiteral)|\(decimalLiteral)"
-                 */
-                /*
-                 let decimalLiteral = #"[0-9][0-9_]*(\.[0-9][0-9_]*)?([eE][-+]?[0-9][0-9_]*)?"#
-                 let hexadecimalLiteral = #"0x[0-9A-Fa-f][0-9A-Fa-f]*(\.[0-9A-Fa-f][0-9A-Fa-f]*)?([pP][-+]?[0-9][0-9_]*)?"#
-                 let floatingPointLiteral = "\(hexadecimalLiteral)|\(decimalLiteral)"
-                 */
-
-                /*
-                 let integerLiteral = "0b[01][01_]*|0o[0-7][0-7_]*|0x[0-9A-Fa-f][0-9A-Fa-f_]*|[0-9][0-9_]*"
-                 let floatingPointLiteral = #"0x[0-9A-Fa-f][0-9A-Fa-f]*(\.[0-9A-Fa-f][0-9A-Fa-f]*)?([pP][-+]?[0-9][0-9_]*)?|[0-9][0-9_]*(\.[0-9][0-9_]*)?([eE][-+]?[0-9][0-9_]*)?"#
-
-                 let numberLiteral = "(-?(\(floatingPointLiteral)))|(-?(\(integerLiteral)))"
-                 */
-                return #"(-?(0x[0-9A-Fa-f][0-9A-Fa-f]*(\.[0-9A-Fa-f][0-9A-Fa-f]*)?([pP][-+]?[0-9][0-9_]*)?|[0-9][0-9_]*(\.[0-9][0-9_]*)?([eE][-+]?[0-9][0-9_]*)?))|(-?(0b[01][01_]*|0o[0-7][0-7_]*|0x[0-9A-Fa-f][0-9A-Fa-f_]*|[0-9][0-9_]*))"#
+                return #"(-?((0x[0-9A-Fa-f][0-9A-Fa-f_]*((\.[0-9A-Fa-f][0-9A-Fa-f_]*[pP][-+]?[0-9][0-9_]*)|(\.[0-9A-Fa-f][0-9A-Fa-f_]*)|([pP][-+]?[0-9][0-9_]*)))|([0-9][0-9_]*((\.[0-9][0-9_]*[eE][-+]?[0-9][0-9_]*)|(\.[0-9][0-9_]*)|([eE][-+]?[0-9][0-9_]*)))))|(-?(0b[01][01_]*|0o[0-7][0-7_]*|0x[0-9A-Fa-f][0-9A-Fa-f_]*|[0-9][0-9_]*))"#
             case .operator:
-                /*
-                 let operatorHead = "/=\\-\\+\\!\\*%<>&|\\^~\\?\u{00A1}-\u{00A7}\u{00A9}-\u{00AB}\u{00AC}-\u{00AE}\u{00B0}-\u{00B1}\u{00B6}\u{00BB}\u{00BF}\u{00D7}\u{00F7}\u{2016}-\u{2017}\u{2020}-\u{2027}\u{2030}-\u{203E}\u{2041}-\u{2053}\u{2055}-\u{205E}\u{2190}-\u{23FF}\u{2500}-\u{2775}\u{2794}-\u{2BFF}\u{2E00}-\u{2E7F}\u{3001}-\u{3003}\u{3008}-\u{3020}\u{3030}"
-                 let operatorCharacter = "\(operatorHead)\u{0300}-\u{036F}\u{1DC0}-\u{1DFF}\u{20D0}-\u{20FF}\u{FE00}-\u{FE0F}\u{FE20}-\u{FE2F}\u{E0100}-\u{E01EF}"
-                 let nonDotOperator = "[\(operatorHead)][\(operatorCharacter)]*"
-                 let dotOperator = "\\.[\\.\(operatorCharacter)]*"
-                 let operators = "(\(nonDotOperator))|(\(dotOperator))"
-                 */
                 return "([/=\\-\\+\\!\\*%<>&|\\^~\\?¡-§©-«¬-®°-±¶»¿×÷‖-‗†-‧‰-‾⁁-⁓⁕-⁞←-⏿─-❵➔-⯿⸀-⹿、-〃〈-〠〰][/=\\-\\+\\!\\*%<>&|\\^~\\?¡-§©-«¬-®°-±¶»¿×÷‖-‗†-‧‰-‾⁁-⁓⁕-⁞←-⏿─-❵➔-⯿⸀-⹿、-〃〈-〠〰̀-ͯ᷀-᷿⃐-⃿︀-️︠-︯󠄀-󠇯]*)|(\\.[\\./=\\-\\+\\!\\*%<>&|\\^~\\?¡-§©-«¬-®°-±¶»¿×÷‖-‗†-‧‰-‾⁁-⁓⁕-⁞←-⏿─-❵➔-⯿⸀-⹿、-〃〈-〠〰̀-ͯ᷀-᷿⃐-⃿︀-️︠-︯󠄀-󠇯]*)"
             case .keyword:
-                return Self.keywords.joined(separator: "|")
+                return "#available|#colorLiteral|#column|#else|#elseif|#endif|#error|#file|#fileLiteral|#function|#if|#imageLiteral|#line|#selector|#sourceLocation|#warning|@GKInspectable|@IBAction|@IBDesignable|@IBInspectable|@IBOutlet|@NSApplicationMain|@NSCopying|@NSManaged|@UIApplicationMain|@autoclosure|@available|@convention|@discardableResult|@dynamicCallable|@dynamicMemberLookup|@escaping|@frozen|@inlinable|@main|@nonescaping|@nonobjc|@objc|@objcMembers|@propertyWrapper|@requires_stored_property_inits|@resultBuilder|@testable|@unknown|@usableFromInline|@warn_unqualified_access|Any|Protocol|Self|Type|actor|as|associatedtype|associativity|async|await|break|case|catch|class|continue|convenience|default|defer|deinit|didSet|do|dynamic|enum|extension|fallthrough|false|fileprivate|final|for|func|get|guard|if|import|in|indirect|infix|init|inout|internal|is|isolated|lazy|left|let|mutating|nil|nonisolated|nonmutating|open|operator|optional|override|postfix|precedencgroup|prefix|private|protocol|public|repeat|required|rethrows|return|right|self|set|some|static|struct|subscript|super|switch|throw|throws|true|try|typealias|var|weak|where|while|willSet"
             case .parenthesis:
                 return #"[<\(\[{}\])>]"#
             case .delimiter:
@@ -140,7 +85,6 @@ public struct SwiftParser: SyntaxParser {
                 return "[\\s\\S]"
             }
         }
-
     }
     public enum SemanticToken {
         case comment                  // コメント
