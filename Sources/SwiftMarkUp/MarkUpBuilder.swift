@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct MarkUp<Content: MarkUpView>: View {
+public struct MarkUp<Content: MarkUpView>: MarkUpView {
     private var alignment: HorizontalAlignment
     private var contents: () -> Content
     public init(alignment: HorizontalAlignment = .center, @MarkUpBuilder contents: @escaping () -> Content) {
@@ -23,7 +23,31 @@ public struct MarkUp<Content: MarkUpView>: View {
 
 public protocol MarkUpView: View {}
 
+extension EmptyView: MarkUpView {}
+extension AnyView: MarkUpView {}
 extension Group: MarkUpView where Content: View {}
+public struct _EitherView<First: MarkUpView, Second: MarkUpView>: MarkUpView  {
+    enum Either {
+        case first(() -> First)
+        case second(() -> Second)
+    }
+    init(@ViewBuilder first: @escaping () -> First) {
+        self.content = .first(first)
+    }
+    init(@ViewBuilder second: @escaping () -> Second) {
+        self.content = .second(second)
+    }
+    let content: Either
+
+    public var body: some View {
+        switch content {
+        case let .first(content):
+            content()
+        case let .second(content):
+            content()
+        }
+    }
+}
 
 @resultBuilder
 public struct MarkUpBuilder {
@@ -130,16 +154,32 @@ public struct MarkUpBuilder {
         }
     }
 
-    public static func buildEither<T0: MarkUpView>(first t0: T0) -> T0 {
-        return t0
+    public static func buildOptional<T0: MarkUpView>(_ t0: T0?) -> _EitherView<T0, EmptyView> {
+        if let t0 = t0 {
+            return _EitherView {
+                t0
+            }
+        } else {
+            return _EitherView {
+                EmptyView()
+            }
+        }
     }
 
-    public static func buildEither<T0: MarkUpView>(second t0: T0) -> T0 {
-        return t0
+    public static func buildEither<First: MarkUpView, Second: MarkUpView>(first: First) -> _EitherView<First, Second> {
+        _EitherView {
+            first
+        }
     }
 
-    public static func buildLimitedAvailability<T0: MarkUpView>(_ t0: T0) -> T0 {
-        return t0
+    public static func buildEither<First: MarkUpView, Second: MarkUpView>(second: Second) -> _EitherView<First, Second> {
+        _EitherView {
+            second
+        }
+    }
+
+    public static func buildLimitedAvailability<T0: MarkUpView>(_ t0: T0) -> AnyView {
+        return AnyView(t0)
     }
 
     public static func buildExpression(_ expression: LocalizedStringKey) -> MarkUpText {
