@@ -97,29 +97,10 @@ public struct SwiftParser: SyntaxParser {
                  let sharpstring = ##"#+".*"#+"##
                  let stringLiteral = "(\(sharpstring))|(\(multilineString))|(\(normalString))"
                  */
-                // 参考: https://refluxflow.blogspot.com/2007/09/blog-post.html
+                // reference: https://refluxflow.blogspot.com/2007/09/blog-post.html
                 return ##"(#+".*"#+)|("""[\s\S]*?["""|\n])|("([^\\"\n]|\\.)*["|\n])"##
             case .number:
-                /*
-                 let binaryLiteral = "0b[01][01_]*"
-                 let octalLiteral = "0o[0-7][0-7_]*"
-                 let decimalLiteral = "[0-9][0-9_]*"
-                 let hexadecimalLiteral = "0x[0-9A-Fa-f][0-9A-Fa-f_]*"
-                 let integerLiteral = "\(binaryLiteral)|\(octalLiteral)|\(hexadecimalLiteral)|\(decimalLiteral)"
-                 */
-                /*
-                 let decimalLiteral = #"[0-9][0-9_]*(\.[0-9][0-9_]*)?([eE][-+]?[0-9][0-9_]*)?"#
-                 let hexadecimalLiteral = #"0x[0-9A-Fa-f][0-9A-Fa-f]*(\.[0-9A-Fa-f][0-9A-Fa-f]*)?([pP][-+]?[0-9][0-9_]*)?"#
-                 let floatingPointLiteral = "\(hexadecimalLiteral)|\(decimalLiteral)"
-                 */
-
-                /*
-                 let integerLiteral = "0b[01][01_]*|0o[0-7][0-7_]*|0x[0-9A-Fa-f][0-9A-Fa-f_]*|[0-9][0-9_]*"
-                 let floatingPointLiteral = #"0x[0-9A-Fa-f][0-9A-Fa-f]*(\.[0-9A-Fa-f][0-9A-Fa-f]*)?([pP][-+]?[0-9][0-9_]*)?|[0-9][0-9_]*(\.[0-9][0-9_]*)?([eE][-+]?[0-9][0-9_]*)?"#
-
-                 let numberLiteral = "(-?(\(floatingPointLiteral)))|(-?(\(integerLiteral)))"
-                 */
-                return #"(-?(0x[0-9A-Fa-f][0-9A-Fa-f]*(\.[0-9A-Fa-f][0-9A-Fa-f]*)?([pP][-+]?[0-9][0-9_]*)?|[0-9][0-9_]*(\.[0-9][0-9_]*)?([eE][-+]?[0-9][0-9_]*)?))|(-?(0b[01][01_]*|0o[0-7][0-7_]*|0x[0-9A-Fa-f][0-9A-Fa-f_]*|[0-9][0-9_]*))"#
+                return #"(-?((0x[0-9A-Fa-f][0-9A-Fa-f_]*((\.[0-9A-Fa-f][0-9A-Fa-f_]*[pP][-+]?[0-9][0-9_]*)|(\.[0-9A-Fa-f][0-9A-Fa-f_]*)|([pP][-+]?[0-9][0-9_]*)))|([0-9][0-9_]*((\.[0-9][0-9_]*[eE][-+]?[0-9][0-9_]*)|(\.[0-9][0-9_]*)|([eE][-+]?[0-9][0-9_]*)))))|(-?(0b[01][01_]*|0o[0-7][0-7_]*|0x[0-9A-Fa-f][0-9A-Fa-f_]*|[0-9][0-9_]*))"#
             case .operator:
                 /*
                  let operatorHead = "/=\\-\\+\\!\\*%<>&|\\^~\\?\u{00A1}-\u{00A7}\u{00A9}-\u{00AB}\u{00AC}-\u{00AE}\u{00B0}-\u{00B1}\u{00B6}\u{00BB}\u{00BF}\u{00D7}\u{00F7}\u{2016}-\u{2017}\u{2020}-\u{2027}\u{2030}-\u{203E}\u{2041}-\u{2053}\u{2055}-\u{205E}\u{2190}-\u{23FF}\u{2500}-\u{2775}\u{2794}-\u{2BFF}\u{2E00}-\u{2E7F}\u{3001}-\u{3003}\u{3008}-\u{3020}\u{3030}"
