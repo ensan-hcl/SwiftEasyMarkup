@@ -22,10 +22,10 @@ public prefix func *** (value: LocalizedStringKey) -> StyledTexts.BoldItalic {
     return .init(value: value)
 }
 
-infix operator |
+infix operator ~~
 
 @available(iOS 15, macOS 12, watchOS 8, tvOS 15, *)
-public func | (lhs: String, rhs: String) -> StyledTexts.Link {
+public func ~~ (lhs: String, rhs: String) -> StyledTexts.Link {
     var attributedString = AttributedString(lhs)
     let range = Range(uncheckedBounds: (attributedString.startIndex, attributedString.endIndex))
     attributedString[range].link = URL(string: rhs)

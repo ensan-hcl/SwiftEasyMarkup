@@ -26,7 +26,7 @@ struct TestView: View {
             }
             """
             let appleLink = "https://www.apple.com/"
-            |"Let's see \("Apple.com" | appleLink)"                                   // tabbed link
+            |"Let's see \("Apple.com" ~~ appleLink)"                                   // tabbed link
             if isOK {
                 ***"If can be used"
             } else {

@@ -9,9 +9,8 @@ final class MarkUpBuildersTests: XCTestCase {
         MarkUp {
             // MARK: Check link operator
             if #available(iOS 15, macOS 12, watchOS 8, tvOS 15, *) {
-                "link operator compile is now failing"
-                //"foo" | "bar"
-                //"\("foo"|"bar")"
+                "foo" ~~ "bar"
+                "\("foo"~~"bar")"
             }
 
             // MARK: Check emphasis operators
