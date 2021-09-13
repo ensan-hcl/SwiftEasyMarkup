@@ -90,14 +90,6 @@ public struct SwiftParser: SyntaxParser {
             case .attribute:
                 return "@(\(Self.identifier.necessaryRegularExpression))"
             case .string:
-                // \nでない\"または\+何かの連続であり、最後は"または改行
-                /*
-                 let normalString = #""([^\\"\n]|\\.)*["|\n]"#
-                 let multilineString = #""""[\s\S]*?["""|\n]"#
-                 let sharpstring = ##"#+".*"#+"##
-                 let stringLiteral = "(\(sharpstring))|(\(multilineString))|(\(normalString))"
-                 */
-                // reference: https://refluxflow.blogspot.com/2007/09/blog-post.html
                 return ##"(#+".*"#+)|("""[\s\S]*?["""|\n])|("([^\\"\n]|\\.)*["|\n])"##
             case .number:
                 return #"(-?((0x[0-9A-Fa-f][0-9A-Fa-f_]*((\.[0-9A-Fa-f][0-9A-Fa-f_]*[pP][-+]?[0-9][0-9_]*)|(\.[0-9A-Fa-f][0-9A-Fa-f_]*)|([pP][-+]?[0-9][0-9_]*)))|([0-9][0-9_]*((\.[0-9][0-9_]*[eE][-+]?[0-9][0-9_]*)|(\.[0-9][0-9_]*)|([eE][-+]?[0-9][0-9_]*)))))|(-?(0b[01][01_]*|0o[0-7][0-7_]*|0x[0-9A-Fa-f][0-9A-Fa-f_]*|[0-9][0-9_]*))"#

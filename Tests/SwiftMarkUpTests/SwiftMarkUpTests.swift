@@ -10,10 +10,26 @@ final class SwiftSyntaxHighlightTests: XCTestCase {
     }
 
     func testStringLiteralExpression() throws {
-        let normalStringExpression = #""([^\\"\n]|\\.)*["|\n]"#
-        XCTAssertEqual(firstMatch(of: #""aa\"a""#, regexp: normalStringExpression),  #""aa\"a""#)
-        let stringExpression = SwiftParser.LexicalToken.string.necessaryRegularExpression
-        XCTAssertEqual(firstMatch(of: #""aa\"a""#, regexp: stringExpression),  #""aa\"a""#)
+        // reference: https://refluxflow.blogspot.com/2007/09/blog-post.html
+
+        let normalStringLiteral = #""([^\\"\n]|\\.)*["|\n]"#
+        let multilineStringLiteral = #""""[\s\S]*?["""|\n]"#
+        let sharpStringLiteral = ##"#+".*"#+"##
+        let stringLiteral = "(\(sharpStringLiteral))|(\(multilineStringLiteral))|(\(normalStringLiteral))"
+
+        // MARK: Check whether expression is correctly constructed
+        let expression = SwiftParser.LexicalToken.string.necessaryRegularExpression
+        XCTAssertEqual(expression, stringLiteral)
+
+        if expression != stringLiteral {
+            print("Fix it: set SwiftParser.LexicalToken.string.necessaryRegularExpression as \(stringLiteral)")
+        }
+
+        // MARK: Check whole expression
+        XCTAssertEqual(firstMatch(of: #""aa\"a""#, regexp: expression),  #""aa\"a""#)
+
+        // MARK: Check whole normalString
+        XCTAssertEqual(firstMatch(of: #""aa\"a""#, regexp: normalStringLiteral),  #""aa\"a""#)
     }
 
     func testNumberLiteralExpression() throws {
