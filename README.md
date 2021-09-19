@@ -2,7 +2,7 @@
 
 A mark-up DSL created in Swift for SwiftUI.
 
-SwiftMarkUp version: 0.1.0
+SwiftMarkUp version: 0.2.0
 
 Swift version: 5.5
 
