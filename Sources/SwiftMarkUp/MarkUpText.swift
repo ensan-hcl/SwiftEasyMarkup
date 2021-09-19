@@ -9,19 +9,19 @@ import SwiftUI
 
 public struct MarkUpText: MarkUpView {
     public enum Level: Int {
-        case one = 1, two, three, four, five, six
+        case zero = 0, one, two, three, four, five, six
     }
     private var text: Text
     private var level: Level
-    public init(verbatim text: String, level: Level = .one) {
+    public init(verbatim text: String, level: Level = .zero) {
         self.text = Text(LocalizedStringKey(text))
         self.level = level
     }
-    public init(text: Text, level: Level = .one) {
+    public init(text: Text, level: Level = .zero) {
         self.text = text
         self.level = level
     }
-    public init(_ text: LocalizedStringKey, level: Level = .one) {
+    public init(_ text: LocalizedStringKey, level: Level = .zero) {
         self.text = Text(text)
         self.level = level
     }
