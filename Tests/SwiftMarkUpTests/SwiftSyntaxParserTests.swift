@@ -2,9 +2,6 @@ import XCTest
 @testable import SwiftMarkUp
 
 // reference: https://docs.swift.org/swift-book/ReferenceManual/LexicalStructure.html
-// current limitation
-// - string interpolation is ignored
-// - nested comments does not be parsed correctly
 
 final class SwiftSyntaxParserTests: XCTestCase {
     func firstMatch(of string: String, regexp: String) -> String {
@@ -21,11 +18,26 @@ final class SwiftSyntaxParserTests: XCTestCase {
         let identifierExpression = "\\$[0-9]+|\\$[\(identifierCharacter)]+|`[\(identifierHead)][\(identifierCharacter)]*`|[\(identifierHead)][\(identifierCharacter)]*"
 
         // MARK: Check whether expression is correctly constructed
-        let expression = SwiftParser.LexicalToken.identifier.necessaryRegularExpression
+        let expression = SwiftParser.ParseContext.LexicalToken.identifier.necessaryRegularExpression
         XCTAssertEqual(expression, identifierExpression)
         if expression != identifierExpression {
             let escaped = identifierExpression.unicodeScalars.map{$0.escaped(asASCII: true)}.joined()
             print("Fix it: set SwiftParser.LexicalToken.identifier.necessaryRegularExpression as \(escaped)")
+        }
+    }
+
+    func testAttributesExpression() throws {
+        let attributes = [
+            "@autoclosure", "@escaping", "@nonescaping", "@propertyWrapper", "@testable", "@frozen", "@main", "@unknown", "@resultBuilder", "@inlinable", "@usableFromInline", "@available", "@dynamicMemberLookup", "@dynamicCallable", "@objc", "@nonobjc", "@objcMembers", "@convention", "@discardableResult", "@IBAction", "@IBOutlet", "@IBDesignable", "@IBInspectable", "@GKInspectable", "@UIApplicationMain", "@NSApplicationMain", "@NSCopying", "@NSManaged", "@requires_stored_property_inits", "@warn_unqualified_access"
+        ]
+        let specialAttributeExpression = Array(Set(attributes)).sorted(by: >).joined(separator: "|")
+
+        // MARK: Check whether expression is correctly constructed
+        let expression = SwiftParser.SemanticToken.specialAttributeExpression
+        XCTAssertEqual(expression, specialAttributeExpression)
+
+        if expression != specialAttributeExpression {
+            print("Fix it: set SwiftParser.SemanticToken.specialAttributeExpression as \(specialAttributeExpression)")
         }
     }
 
@@ -51,21 +63,31 @@ final class SwiftSyntaxParserTests: XCTestCase {
 
             // operator relating keywords
             "as", "is", "prefix", "infix", "postfix", "operator", "precedencgroup", "associativity", "left", "right",
-
-            // #literal
-            "#available", "#colorLiteral", "#column", "#else", "#elseif", "#endif", "#error", "#file", "#fileLiteral", "#function", "#if", "#imageLiteral", "#line", "#selector", "#sourceLocation", "#warning",
-
-            // attributes
-            "@autoclosure", "@escaping", "@nonescaping", "@propertyWrapper", "@testable", "@frozen", "@main", "@unknown", "@resultBuilder", "@inlinable", "@usableFromInline", "@available", "@dynamicMemberLookup", "@dynamicCallable", "@objc", "@nonobjc", "@objcMembers", "@convention", "@discardableResult", "@IBAction", "@IBOutlet", "@IBDesignable", "@IBInspectable", "@GKInspectable", "@UIApplicationMain", "@NSApplicationMain", "@NSCopying", "@NSManaged", "@requires_stored_property_inits", "@warn_unqualified_access"
         ]
-        let keywordExpression = Array(Set(keywords)).sorted().joined(separator: "|")
+        let specialKeywordExpression = Array(Set(keywords)).sorted(by: >).joined(separator: "|")
 
         // MARK: Check whether expression is correctly constructed
-        let expression = SwiftParser.LexicalToken.keyword.necessaryRegularExpression
-        XCTAssertEqual(expression, keywordExpression)
+        let expression = SwiftParser.SemanticToken.specialKeywordExpression
+        XCTAssertEqual(expression, specialKeywordExpression)
 
-        if expression != keywordExpression {
-            print("Fix it: set SwiftParser.LexicalToken.keyword.necessaryRegularExpression as \(keywordExpression)")
+        if expression != specialKeywordExpression {
+            print("Fix it: set SwiftParser.SemanticToken.specialKeywordExpression as \(specialKeywordExpression)")
+        }
+    }
+
+    func testHashKeywordExpression() throws {
+        let hashKeywords = [
+            // #literal
+            "#available", "#colorLiteral", "#column", "#else", "#elseif", "#endif", "#error", "#file", "#fileLiteral", "#function", "#if", "#imageLiteral", "#line", "#selector", "#sourceLocation", "#warning",
+        ]
+        let hashKeywordExpression = Array(Set(hashKeywords)).sorted(by: >).joined(separator: "|")
+
+        // MARK: Check whether expression is correctly constructed
+        let expression = SwiftParser.LexicalToken.hashKeyword.necessaryRegularExpression
+        XCTAssertEqual(expression, hashKeywordExpression)
+
+        if expression != hashKeywordExpression {
+            print("Fix it: set SwiftParser.LexicalToken.hashKeyword.necessaryRegularExpression as \(hashKeywordExpression)")
         }
     }
 
@@ -85,27 +107,16 @@ final class SwiftSyntaxParserTests: XCTestCase {
         }
     }
 
-    func testStringLiteralExpression() throws {
-        // reference: https://refluxflow.blogspot.com/2007/09/blog-post.html
-
-        let normalStringLiteral = #""([^\\"\n]|\\.)*["|\n]"#
-        let multilineStringLiteral = #""""[\s\S]*?["""|\n]"#
-        let sharpStringLiteral = ##"#+".*"#+"##
-        let stringLiteral = "(\(sharpStringLiteral))|(\(multilineStringLiteral))|(\(normalStringLiteral))"
+    func testHashStringLiteralExpression() throws {
+        let hashStringLiteral = ##"#+".*"#+"##
 
         // MARK: Check whether expression is correctly constructed
-        let expression = SwiftParser.LexicalToken.string.necessaryRegularExpression
-        XCTAssertEqual(expression, stringLiteral)
+        let expression = SwiftParser.LexicalToken.hashString.necessaryRegularExpression
+        XCTAssertEqual(expression, hashStringLiteral)
 
-        if expression != stringLiteral {
-            print("Fix it: set SwiftParser.LexicalToken.string.necessaryRegularExpression as \(stringLiteral)")
+        if expression != hashStringLiteral {
+            print("Fix it: set SwiftParser.LexicalToken.hashString.necessaryRegularExpression as \(hashStringLiteral)")
         }
-
-        // MARK: Check whole expression
-        XCTAssertEqual(firstMatch(of: #""aa\"a""#, regexp: expression),  #""aa\"a""#)
-
-        // MARK: Check whole normalString
-        XCTAssertEqual(firstMatch(of: #""aa\"a""#, regexp: normalStringLiteral),  #""aa\"a""#)
     }
 
     func testNumberLiteralExpression() throws {
@@ -120,7 +131,7 @@ final class SwiftSyntaxParserTests: XCTestCase {
         let numberLiteral = "(-?(\(floatingPointLiteral)))|(-?(\(integerLiteral)))"
 
         // MARK: Check whether expression is correctly constructed
-        let expression = SwiftParser.LexicalToken.number.necessaryRegularExpression
+        let expression = SwiftParser.LexicalToken.numberLiteral.necessaryRegularExpression
         XCTAssertEqual(expression, numberLiteral)
 
         if expression != numberLiteral {

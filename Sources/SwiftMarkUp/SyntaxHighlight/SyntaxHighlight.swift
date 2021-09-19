@@ -14,46 +14,31 @@ public struct SyntaxHighlighter<Parser: SyntaxParser> {
     public init(parser: Parser) {
         self.parser = parser
     }
-    func highlight<Design: SyntaxHighlightDesign>(code: String, design: Design) -> AttributedString where Design.Token == Parser.SemanticToken {
-        let attributedStrings = parser.parse(code: code).map{design.attribute(token: $0, string: $1)}
+    public func highlight<Design: SyntaxHighlightDesign>(code: String, design: Design) -> AttributedString where Design.Token == Parser.SemanticToken {
+        let attributedStrings = parse(code: code).map{design.attribute(token: $0, string: $1)}
         return attributedStrings.reduce(AttributedString(""), +)
+    }
+    func parse(code: String) -> [(token: Parser.SemanticToken, string: String)] {
+        var substring = code[...]
+        let lexicalTokens = parser.lex(code: &substring, target: .top)
+        return parser.semantify(from: lexicalTokens)
     }
 }
 
 public protocol SyntaxParser {
-    associatedtype LexicalToken: SyntaxParserLexicalToken
+    associatedtype ParseContext: SyntaxParserParseContext
     associatedtype SemanticToken
-    static var parseOrder: [LexicalToken] { get }
-    static func createList(from lexicalTokens: [(token: LexicalToken, string: String)]) -> [(token: SemanticToken, string: String)]
-
-    func parse(code: String) -> [(token: SemanticToken, string: String)]
+    func lex(code: inout Substring, target: ParseContext) -> [(ParseContext.LexicalToken, String)]
+    func semantify(from lexicalTokens: [(token: ParseContext.LexicalToken, string: String)]) -> [(token: SemanticToken, string: String)]
 }
 
-public protocol SyntaxParserLexicalToken {
-    var necessaryRegularExpression: String { get }
+public protocol SyntaxParserParseContext {
+    associatedtype LexicalToken
+    static var top: Self { get }
 }
 
 @available(iOS 15, macOS 12, watchOS 8, tvOS 15, *)
 public protocol SyntaxHighlightDesign {
     associatedtype Token
     func attribute(token: Token, string: String) -> AttributedString
-}
-
-
-public extension SyntaxParser {
-    func parse(code: String) -> [(token: SemanticToken, string: String)] {
-        var substring = code[...]
-        var lexicalTokens: [(LexicalToken, String)] = []
-        while !substring.isEmpty {
-            for lexicalToken in Self.parseOrder {
-                if let range = substring.range(of: "^(\(lexicalToken.necessaryRegularExpression))", options: .regularExpression) {
-                    let tokenString = String(substring[range])
-                    lexicalTokens.append((lexicalToken, tokenString))
-                    substring = substring[range.upperBound...]
-                    break
-                }
-            }
-        }
-        return Self.createList(from: lexicalTokens)
-    }
 }
