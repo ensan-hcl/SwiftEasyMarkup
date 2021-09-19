@@ -21,12 +21,22 @@ MarkUp(alignment: .leading) {
     >"Quote here"                                                             // quote
     // code block with syntax highlight
     "swift"</>"""
-    print("Hello World"!)
+    // Convert number into Japnaese Kansuji
+    let formatter = NumberFormatter()
+    formatter.numberStyle = .spellOut
+    formatter.locale = .init(identifier: "ja-JP")
+    let number = 123456789012345678
+    if let string = formatter.string(from: NSNumber(value: number)){
+        print(string)   //十二京三千四百五十六兆七千八百九十億千二百三十四万五千六百七十八
+    }
     """
     let appleLink = "https://www.apple.com/"                                  // declare constants
-    |"Let's see \("Apple.com" | appleLink)"                                   // link and tab
+    |"Let's see \("Apple.com" ~~ appleLink)"                                  // link and tab
     if isOK {                                                                 // if handling
-        ***"If can be used"
+        ***"You can use if statements"
+        if #available(iOS 15, *) {
+            "You can also use #available checking"
+        }
     } else {
         ***"Else can be used"
     }
