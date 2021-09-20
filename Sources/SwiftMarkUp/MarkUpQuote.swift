@@ -47,7 +47,7 @@ public struct DefaultQuoteStyle: QuoteStyle {
     }
 }
 
-struct AnyQuoteStyle: QuoteStyle {
+private struct AnyQuoteStyle: QuoteStyle {
     private let makeBody: (Text, Int) -> AnyView
     init<S: QuoteStyle>(_ style: S) {
         self.makeBody = { item, level in AnyView(style.makeBody(item, level: level))}
@@ -57,13 +57,13 @@ struct AnyQuoteStyle: QuoteStyle {
     }
 }
 
-extension EnvironmentValues {
+private extension EnvironmentValues {
     var quoteStyle: AnyQuoteStyle {
         get { self[QuoteStyleKey.self] }
         set { self[QuoteStyleKey.self] = newValue }
     }
 }
-struct QuoteStyleKey: EnvironmentKey {
+private struct QuoteStyleKey: EnvironmentKey {
     static let defaultValue: AnyQuoteStyle = .init(.default)
 }
 
