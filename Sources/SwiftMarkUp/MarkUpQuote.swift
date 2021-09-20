@@ -8,6 +8,7 @@
 import SwiftUI
 
 public struct MarkUpQuote: MarkUpView {
+    @Environment(\.quoteStyle) private var quoteStyle
     public enum Level: Int {
         case one = 1, two, three, four, five, six
     }
@@ -22,19 +23,59 @@ public struct MarkUpQuote: MarkUpView {
         self.level = level
     }
     public var body: some View {
+        quoteStyle.makeBody(Text(self.text), level: level.rawValue)
+    }
+}
+
+public protocol QuoteStyle {
+    associatedtype Body: View
+    func makeBody(_ item: Text, level: Int) -> Body
+}
+
+public struct DefaultQuoteStyle: QuoteStyle {
+    public func makeBody(_ item: Text, level: Int) -> some View {
         HStack {
-            ForEach (0 ..< level.rawValue) { _ in
+            ForEach (0 ..< level) { _ in
                 Rectangle()
                     .fill(Color.gray)
                     .frame(width: 4)
                     .frame(height: 20)
             }
-            Text(self.text)
+            item
                 .foregroundColor(.gray)
         }
     }
 }
 
+struct AnyQuoteStyle: QuoteStyle {
+    private let makeBody: (Text, Int) -> AnyView
+    init<S: QuoteStyle>(_ style: S) {
+        self.makeBody = { item, level in AnyView(style.makeBody(item, level: level))}
+    }
+    func makeBody(_ item: Text, level: Int) -> some View {
+        self.makeBody(item, level)
+    }
+}
+
+extension EnvironmentValues {
+    var quoteStyle: AnyQuoteStyle {
+        get { self[QuoteStyleKey.self] }
+        set { self[QuoteStyleKey.self] = newValue }
+    }
+}
+struct QuoteStyleKey: EnvironmentKey {
+    static let defaultValue: AnyQuoteStyle = .init(.default)
+}
+
+public extension QuoteStyle where Self == DefaultQuoteStyle {
+    static var `default`: Self { Self() }
+}
+
+public extension View {
+    func quoteStyle<S: QuoteStyle>(_ style: S) -> some View {
+        self.environment(\.quoteStyle, .init(style))
+    }
+}
 
 prefix operator >
 public prefix func >(value: LocalizedStringKey) -> MarkUpQuote {
