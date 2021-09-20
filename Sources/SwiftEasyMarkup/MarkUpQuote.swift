@@ -1,13 +1,13 @@
 //
-//  MarkUpQuote.swift
-//  MarkUpQuote
+//  MarkupQuote.swift
+//  MarkupQuote
 //
 //  Created by ensan on 2021/09/11.
 //
 
 import SwiftUI
 
-public struct MarkUpQuote: MarkUpView {
+public struct MarkupQuote: MarkupView {
     @Environment(\.quoteStyle) private var quoteStyle
     public enum Level: Int {
         case one = 1, two, three, four, five, six
@@ -78,31 +78,31 @@ public extension View {
 }
 
 prefix operator >
-public prefix func >(value: LocalizedStringKey) -> MarkUpQuote {
+public prefix func >(value: LocalizedStringKey) -> MarkupQuote {
     return .init(value, level: .one)
 }
 
 prefix operator >>
-public prefix func >>(value: LocalizedStringKey) -> MarkUpQuote {
+public prefix func >>(value: LocalizedStringKey) -> MarkupQuote {
     return .init(value, level: .two)
 }
 
 prefix operator >>>
-public prefix func >>>(value: LocalizedStringKey) -> MarkUpQuote {
+public prefix func >>>(value: LocalizedStringKey) -> MarkupQuote {
     return .init(value, level: .three)
 }
 
 prefix operator >>>>
-public prefix func >>>>(value: LocalizedStringKey) -> MarkUpQuote {
+public prefix func >>>>(value: LocalizedStringKey) -> MarkupQuote {
     return .init(value, level: .four)
 }
 
 prefix operator >>>>>
-public prefix func >>>>>(value: LocalizedStringKey) -> MarkUpQuote {
+public prefix func >>>>>(value: LocalizedStringKey) -> MarkupQuote {
     return .init(value, level: .five)
 }
 
 prefix operator >>>>>>
-public prefix func >>>>>>(value: LocalizedStringKey) -> MarkUpQuote {
+public prefix func >>>>>>(value: LocalizedStringKey) -> MarkupQuote {
     return .init(value, level: .six)
 }
