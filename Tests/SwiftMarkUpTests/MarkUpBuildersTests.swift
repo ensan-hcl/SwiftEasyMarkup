@@ -5,6 +5,30 @@ import SwiftUI
 // this test includes compile test, which would fail if an operator has collision with other Swift operators
 final class MarkUpBuildersTests: XCTestCase {
 
+    @ViewBuilder func complileTestStyles() -> some View {
+        // MARK: Check header styles
+        MarkUp {
+            -"foo"
+            --"foo"
+            ---"foo"
+            ----"foo"
+            -----"foo"
+            ------"foo"
+        }
+        .headerStyle(.default)
+
+        // MARK: Check quote styles
+        MarkUp {
+            >"foo"
+            >>"foo"
+            >>>"foo"
+            >>>>"foo"
+            >>>>>"foo"
+            >>>>>>"foo"
+        }
+        .quoteStyle(.default)
+    }
+    
     @ViewBuilder func complileTestOperators() -> some View {
         MarkUp {
             // MARK: Check link operator
