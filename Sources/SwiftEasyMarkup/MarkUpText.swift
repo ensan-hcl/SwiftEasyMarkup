@@ -1,13 +1,13 @@
 //
-//  MarkUpText.swift
-//  MarkUpText
+//  MarkupText.swift
+//  MarkupText
 //
 //  Created by ensan on 2021/09/11.
 //
 
 import SwiftUI
 
-public struct MarkUpText: MarkUpView {
+public struct MarkupText: MarkupView {
     public enum Level: Int {
         case zero = 0, one, two, three, four, five, six
     }
@@ -32,31 +32,31 @@ public struct MarkUpText: MarkUpView {
 }
 
 prefix operator |
-public prefix func |(value: LocalizedStringKey) -> MarkUpText {
+public prefix func |(value: LocalizedStringKey) -> MarkupText {
     return .init(value, level: .one)
 }
 
 prefix operator ||
-public prefix func ||(value: LocalizedStringKey) -> MarkUpText {
+public prefix func ||(value: LocalizedStringKey) -> MarkupText {
     return .init(value, level: .two)
 }
 
 prefix operator |||
-public prefix func |||(value: LocalizedStringKey) -> MarkUpText {
+public prefix func |||(value: LocalizedStringKey) -> MarkupText {
     return .init(value, level: .three)
 }
 
 prefix operator ||||
-public prefix func ||||(value: LocalizedStringKey) -> MarkUpText {
+public prefix func ||||(value: LocalizedStringKey) -> MarkupText {
     return .init(value, level: .four)
 }
 
 prefix operator |||||
-public prefix func |||||(value: LocalizedStringKey) -> MarkUpText {
+public prefix func |||||(value: LocalizedStringKey) -> MarkupText {
     return .init(value, level: .five)
 }
 
 prefix operator ||||||
-public prefix func ||||||(value: LocalizedStringKey) -> MarkUpText {
+public prefix func ||||||(value: LocalizedStringKey) -> MarkupText {
     return .init(value, level: .six)
 }

@@ -53,7 +53,7 @@ public protocol EmbeddableText {
 }
 
 public enum StyledTexts {
-    public struct Bold: MarkUpView, EmbeddableText {
+    public struct Bold: MarkupView, EmbeddableText {
         let value: LocalizedStringKey
         public func appendInterpolation(to interpolation: inout LocalizedStringKey.StringInterpolation) {
             interpolation.appendInterpolation(body)
@@ -62,7 +62,7 @@ public enum StyledTexts {
             Text(value).bold()
         }
     }
-    public struct Italic: MarkUpView, EmbeddableText {
+    public struct Italic: MarkupView, EmbeddableText {
         public typealias Body = Text
         let value: LocalizedStringKey
         public func appendInterpolation(to interpolation: inout LocalizedStringKey.StringInterpolation) {
@@ -72,7 +72,7 @@ public enum StyledTexts {
             Text(value).italic()
         }
     }
-    public struct BoldItalic: MarkUpView, EmbeddableText {
+    public struct BoldItalic: MarkupView, EmbeddableText {
         public typealias Body = Text
         let value: LocalizedStringKey
         public func appendInterpolation(to interpolation: inout LocalizedStringKey.StringInterpolation) {
@@ -83,7 +83,7 @@ public enum StyledTexts {
         }
     }
     @available(iOS 15, macOS 12, watchOS 8, tvOS 15, *)
-    public struct Link: MarkUpView, EmbeddableText {
+    public struct Link: MarkupView, EmbeddableText {
         public typealias Body = Text
         let link: AttributedString
         public func appendInterpolation(to interpolation: inout LocalizedStringKey.StringInterpolation) {
@@ -93,7 +93,7 @@ public enum StyledTexts {
             Text(link)
         }
     }
-    public struct Code: MarkUpView, EmbeddableText {
+    public struct Code: MarkupView, EmbeddableText {
         @Environment(\.colorScheme) private var colorScheme
         private var backgroundColor: Color {
             switch colorScheme {

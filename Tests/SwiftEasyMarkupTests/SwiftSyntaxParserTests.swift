@@ -1,5 +1,5 @@
 import XCTest
-@testable import SwiftMarkUp
+@testable import SwiftEasyMarkup
 
 // reference: https://docs.swift.org/swift-book/ReferenceManual/LexicalStructure.html
 

@@ -1,13 +1,13 @@
 import XCTest
 import SwiftUI
-@testable import SwiftMarkUp
+@testable import SwiftEasyMarkup
 
 // this test includes compile test, which would fail if an operator has collision with other Swift operators
-final class MarkUpBuildersTests: XCTestCase {
+final class MarkupBuildersTests: XCTestCase {
 
     @ViewBuilder func complileTestStyles() -> some View {
         // MARK: Check header styles
-        MarkUp {
+        Markup {
             -"foo"
             --"foo"
             ---"foo"
@@ -18,7 +18,7 @@ final class MarkUpBuildersTests: XCTestCase {
         .headerStyle(.default)
 
         // MARK: Check quote styles
-        MarkUp {
+        Markup {
             >"foo"
             >>"foo"
             >>>"foo"
@@ -30,7 +30,7 @@ final class MarkUpBuildersTests: XCTestCase {
     }
     
     @ViewBuilder func complileTestOperators() -> some View {
-        MarkUp {
+        Markup {
             // MARK: Check link operator
             if #available(iOS 15, macOS 12, watchOS 8, tvOS 15, *) {
                 "foo" ~~ "bar"
@@ -38,7 +38,7 @@ final class MarkUpBuildersTests: XCTestCase {
             }
 
             // MARK: Check emphasis operators
-            MarkUp {
+            Markup {
                 *"foo"
                 "\(*"foo")"
 
@@ -57,7 +57,7 @@ final class MarkUpBuildersTests: XCTestCase {
             }
 
             // MARK: Check tab operators
-            MarkUp {
+            Markup {
                 |"foo"
                 ||"foo"
                 |||"foo"
@@ -66,7 +66,7 @@ final class MarkUpBuildersTests: XCTestCase {
                 ||||||"foo"
             }
             // MARK: Check header operators
-            MarkUp {
+            Markup {
                 -"foo"
                 --"foo"
                 ---"foo"
@@ -76,7 +76,7 @@ final class MarkUpBuildersTests: XCTestCase {
             }
 
             // MARK: Check quote operators
-            MarkUp {
+            Markup {
                 >"foo"
                 >>"foo"
                 >>>"foo"
@@ -90,7 +90,7 @@ final class MarkUpBuildersTests: XCTestCase {
     private let bool2 = Bool.random()
 
     @ViewBuilder func complileTestIfs() -> some View {
-        MarkUp {
+        Markup {
             // MARK: Check optional if
             if self.bool1 {
                 "foo"

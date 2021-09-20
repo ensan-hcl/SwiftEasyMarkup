@@ -1,13 +1,13 @@
 //
-//  MarkUpHeader.swift
-//  MarkUpHeader
+//  MarkupHeader.swift
+//  MarkupHeader
 //
 //  Created by ensan on 2021/09/11.
 //
 
 import SwiftUI
 
-public struct MarkUpHeader: MarkUpView {
+public struct MarkupHeader: MarkupView {
     @Environment(\.headerStyle) private var headerStyle
     public enum Level {
         case one, two, three, four, five, six
@@ -29,11 +29,11 @@ public struct MarkUpHeader: MarkUpView {
 
 public protocol HeaderStyle {
     associatedtype Body: View
-    func makeBody(_ item: Text, level: MarkUpHeader.Level) -> Body
+    func makeBody(_ item: Text, level: MarkupHeader.Level) -> Body
 }
 
 public struct DefaultHeaderStyle: HeaderStyle {
-    func font(level: MarkUpHeader.Level) -> Font {
+    func font(level: MarkupHeader.Level) -> Font {
         switch level {
         case .one: return .largeTitle
         case .two: return .title
@@ -43,18 +43,18 @@ public struct DefaultHeaderStyle: HeaderStyle {
         case .six: return .subheadline
         }
     }
-    public func makeBody(_ item: Text, level: MarkUpHeader.Level) -> some View {
+    public func makeBody(_ item: Text, level: MarkupHeader.Level) -> some View {
         item
             .font(font(level: level))
     }
 }
 
 private struct AnyHeaderStyle: HeaderStyle {
-    private let makeBody: (Text, MarkUpHeader.Level) -> AnyView
+    private let makeBody: (Text, MarkupHeader.Level) -> AnyView
     init<S: HeaderStyle>(_ style: S) {
         self.makeBody = { item, level in AnyView(style.makeBody(item, level: level))}
     }
-    func makeBody(_ item: Text, level: MarkUpHeader.Level) -> some View {
+    func makeBody(_ item: Text, level: MarkupHeader.Level) -> some View {
         self.makeBody(item, level)
     }
 }
@@ -80,31 +80,31 @@ public extension View {
 }
 
 prefix operator -
-public prefix func -(value: LocalizedStringKey) -> MarkUpHeader {
+public prefix func -(value: LocalizedStringKey) -> MarkupHeader {
     return .init(value, level: .one)
 }
 
 prefix operator --
-public prefix func --(value: LocalizedStringKey) -> MarkUpHeader {
+public prefix func --(value: LocalizedStringKey) -> MarkupHeader {
     return .init(value, level: .two)
 }
 
 prefix operator ---
-public prefix func ---(value: LocalizedStringKey) -> MarkUpHeader {
+public prefix func ---(value: LocalizedStringKey) -> MarkupHeader {
     return .init(value, level: .three)
 }
 
 prefix operator ----
-public prefix func ----(value: LocalizedStringKey) -> MarkUpHeader {
+public prefix func ----(value: LocalizedStringKey) -> MarkupHeader {
     return .init(value, level: .four)
 }
 
 prefix operator -----
-public prefix func -----(value: LocalizedStringKey) -> MarkUpHeader {
+public prefix func -----(value: LocalizedStringKey) -> MarkupHeader {
     return .init(value, level: .five)
 }
 
 prefix operator ------
-public prefix func ------(value: LocalizedStringKey) -> MarkUpHeader {
+public prefix func ------(value: LocalizedStringKey) -> MarkupHeader {
     return .init(value, level: .six)
 }
