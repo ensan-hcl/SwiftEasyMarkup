@@ -6,7 +6,18 @@ import SwiftUI
 final class MarkUpBuildersTests: XCTestCase {
 
     @ViewBuilder func complileTestStyles() -> some View {
-        // MARK: Check quote operators
+        // MARK: Check header styles
+        MarkUp {
+            -"foo"
+            --"foo"
+            ---"foo"
+            ----"foo"
+            -----"foo"
+            ------"foo"
+        }
+        .headerStyle(.default)
+
+        // MARK: Check quote styles
         MarkUp {
             >"foo"
             >>"foo"
