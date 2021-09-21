@@ -1,6 +1,6 @@
 # SwiftEasyMarkup
 
-A mark-up DSL created in Swift for SwiftUI.
+A markup DSL created in Swift for SwiftUI.
 
 SwiftEasyMarkup version: 0.3.0
 
@@ -9,6 +9,12 @@ Swift version: 5.5
 ## Features
 
 SwiftEasyMarkup can handle styles in a way which is similar to Markdown format.
+
+* Clear syntax powered by operators and string interpolations 
+* Links, *Italic*, **Bold**, and `Code`
+* Headers, Quote block, tabbed block, and Code block with syntax highlight
+* Condition-dependent text with `if` and `switch` statements
+* Design injection with SwiftUI like `.fooStyle(.style)` syntax
 
 ```swift
 Markup(alignment: .leading) {
@@ -45,14 +51,13 @@ Markup(alignment: .leading) {
 
 ## Implementation
 
-SwiftEasyMarkup uses result builders to achieve declarative mark-up, and using operators to support markdown like syntax. It also uses custom StringInterpolation to support partial styling.
+SwiftEasyMarkup uses result builders to achieve declarative markup, and using operators to support markdown like syntax. It also uses custom StringInterpolation to support partial styling.
 
-It now depends on SwiftUI and some new features on iOS14/macOS11. Therefore it requires these environments. Using syntax highlights also requiers iOS15/macOS12.  
+It now depends on SwiftUI and some new features on iOS14/macOS11/watchOS7/tvOS14. Therefore it requires these environments. Using some features also requiers iOS15/macOS12/watchOS8/tvOS15.  
 
 ## Todos
 
-SwiftMarkup is now working in progress. It requires:
+SwiftEasyMarkup is now working in progress. It requires:
 
-* Make design injectable with SwiftUI like syntax for Markup
-* Add more support of syntax highlights
+* Add more supports of syntax highlights
 * Add support for environments where SwiftUI cannot be used
