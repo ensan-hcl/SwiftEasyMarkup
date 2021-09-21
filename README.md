@@ -51,7 +51,7 @@ It now depends on SwiftUI and some new features on iOS14/macOS11. Therefore it r
 
 ## Todos
 
-SwiftMarkup is now working in progress. It requires:
+SwiftEasyMarkup is now working in progress. It requires:
 
 * Make design injectable with SwiftUI like syntax for Markup
 * Add more support of syntax highlights
